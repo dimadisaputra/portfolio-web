@@ -1,0 +1,39 @@
+---
+// src/pages/projects.astro
+import Layout from "../layouts/Layout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { getCollection } from "astro:content";
+import { getOptimizedImage } from "../utils/imageLoader";
+
+const allProjects = await getCollection("projects");
+
+// Proses semua project dengan gambar
+const projectsWithImages = allProjects.map((project) => ({
+  ...project,
+  imageData: getOptimizedImage(project.data.image),
+}));
+
+const title = "All Projects - Dimas Portfolio";
+const description = "Browse all data projects by Dimas";
+---
+
+<Layout title={title} description={description}>
+  <div class="mt-32 mb-32 sm:mt-48 w-4/5 mx-auto">
+    <h1 class="text-4xl font-bold text-black-alt mb-12 text-center">
+      All Projects
+    </h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {
+        projectsWithImages.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            image={project.imageData}
+            slug={project.slug}
+          />
+        ))
+      }
+    </div>
+  </div>
+</Layout>

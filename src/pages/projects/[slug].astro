@@ -1,0 +1,123 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import { getOptimizedImage } from "../../utils/imageLoader"; // Asumsi Anda punya ini
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { title, description, pubDate, tags = [], image } = project.data;
+
+// Ini adalah cara terbaik untuk merender konten dari koleksi
+const { Content } = await project.render();
+
+// Proses gambar seperti sebelumnya
+const imageData = getOptimizedImage(image);
+
+// SEO Metadata
+const seoTitle = `${title} - Dimas Portfolio`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+
+// Schema.org structured data
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: title,
+  description: description,
+  datePublished: pubDate?.toISOString(),
+  author: {
+    "@type": "Person",
+    name: "Dimas",
+  },
+  image: typeof imageData === "string" ? imageData : imageData.src,
+  keywords: tags?.join(", "),
+};
+
+// Format tanggal untuk ditampilkan
+const formattedDate = pubDate
+  ? pubDate.toLocaleDateString("en-UK", {
+      year: "numeric",
+      month: "long",
+    })
+  : "";
+
+const imageUrl = typeof imageData === "string" ? imageData : imageData.src;
+const imageMetadata = typeof imageData === "object" ? imageData : undefined;
+---
+
+<Layout title={seoTitle} description={description} canonical={canonicalUrl}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <article class="mt-32 mb-32 sm:mt-48 w-3/4 md:w-2/3 mx-auto">
+    <header class="mb-8">
+      <h1 class="text-4xl md:text-6xl font-bold text-black-alt mb-4">
+        {title}
+      </h1>
+      {
+        pubDate && (
+          <time
+            datetime={pubDate.toISOString()}
+            class="text-gray-600 text-lg mb-2 block"
+          >
+            {formattedDate}
+          </time>
+        )
+      }
+      <p class="font-light text-black-alt mb-6 leading-relaxed">
+        {description}
+      </p>
+      {
+        tags.length > 0 && (
+          <div class="flex flex-wrap gap-2 mb-6">
+            {tags.map((tag) => (
+              <span class="px-3 py-1 bg-poppy/10 text-poppy rounded-full text-sm font-medium">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    <div class="mb-24 rounded-2xl overflow-hidden shadow-lg">
+      <img
+        src={imageUrl}
+        alt={`Featured image for ${title}`}
+        class="w-full h-auto object-cover"
+        loading="eager"
+        width={imageMetadata?.width}
+        height={imageMetadata?.height}
+      />
+    </div>
+
+    <div class="prose prose-lg max-w-none">
+      <Content />
+    </div>
+  </article>
+
+  <div class="max-w-4xl mx-auto px-4 pb-16">
+    <a
+      href="/projects"
+      class="inline-flex items-center text-poppy hover:text-dark-purple transition-colors"
+    >
+      <svg
+        xmlns="http://www.w.org/2000/svg"
+        class="h-5 w-5 mr-2"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+          clip-rule="evenodd"></path>
+      </svg>
+      Back to all projects
+    </a>
+  </div>
+</Layout>
