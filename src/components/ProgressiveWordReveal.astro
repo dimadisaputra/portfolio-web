@@ -41,30 +41,43 @@ const words = text
           const words = target.querySelectorAll("span.word");
           if (words.length === 0) return;
 
-          // Ketika fully visible, reveal semua
-          if (entry.intersectionRatio >= 0.9) {
-            words.forEach((word) => {
-              word.classList.add("is-revealed");
-            });
-            return;
-          }
+          if (entry.isIntersecting) {
+            // Hitung posisi scroll relatif terhadap elemen
+            const rect = target.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
 
-          // Progressive reveal berdasarkan scroll position
-          const progress = Math.max(0, Math.min(entry.intersectionRatio, 1));
-          const wordCount = words.length;
-          const wordsToShow = Math.ceil(progress * wordCount);
-
-          words.forEach((word, index) => {
-            if (index < wordsToShow) {
-              word.classList.add("is-revealed");
+            // Jika elemen sudah melewati tengah viewport, reveal semua
+            if (rect.top < windowHeight * 0.5) {
+              words.forEach((word) => {
+                word.classList.add("is-revealed");
+              });
+              return;
             }
-          });
+
+            // Progressive reveal
+            const elementHeight = rect.height;
+            const visibleHeight =
+              Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
+            const progress = Math.max(
+              0,
+              Math.min(visibleHeight / elementHeight, 1)
+            );
+
+            const wordCount = words.length;
+            const wordsToShow = Math.ceil(progress * wordCount);
+
+            words.forEach((word, index) => {
+              if (index < wordsToShow) {
+                word.classList.add("is-revealed");
+              }
+            });
+          }
         });
       },
       {
         root: null,
-        rootMargin: "0px 0px -5% 0px",
-        threshold: Array.from({ length: 101 }, (_, i) => i / 100),
+        rootMargin: "0px",
+        threshold: Array.from({ length: 21 }, (_, i) => i / 20), // Reduced thresholds for better mobile performance
       }
     );
 
