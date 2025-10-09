@@ -1,0 +1,48 @@
+---
+// src/pages/500.astro
+import ErrorLayout from "../layouts/ErrorLayout.astro";
+
+// Variabel untuk SEO
+const title = "500 - Server Error | Dimas Adi Saputra";
+const description =
+  "Oops! Something went wrong on our end. We're working to fix it!";
+---
+
+<ErrorLayout title={title} description={description}>
+  <main class="mt-24 sm:mt-32 animate-fade-in-up">
+    <!-- Hero Section -->
+    <div
+      id="hero"
+      class="flex flex-col items-center justify-center gap-8 w-full max-w-4xl mx-auto text-center px-6"
+    >
+      <div class="relative">
+        <div
+          class="text-9xl sm:text-[12rem] font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-poppy/30 to-red-600/30 mb-4 select-none animate-pulse-slow"
+        >
+          500
+        </div>
+        <div
+          class="absolute inset-0 text-9xl sm:text-[12rem] font-extrabold text-poppy/10 blur-2xl -z-10"
+        >
+          500
+        </div>
+      </div>
+
+      <h1
+        class="text-4xl sm:text-5xl lg:text-6xl text-black-alt font-extrabold leading-tight"
+      >
+        Oops! <span
+          class="text-transparent bg-clip-text bg-gradient-to-r from-poppy to-red-600"
+          >Server Error</span
+        >
+        <span class="inline-block animate-shake">⚡</span>
+      </h1>
+
+      <h2
+        class="text-lg sm:text-xl text-gray-600 w-full sm:w-3/4 leading-relaxed"
+      >
+        Something went wrong. I'm working to fix it!
+      </h2>
+    </div>
+  </main>
+</ErrorLayout>

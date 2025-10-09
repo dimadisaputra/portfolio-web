@@ -1,0 +1,232 @@
+---
+// src/pages/about.astro
+import Layout from "../layouts/Layout.astro";
+import TechUsed from "../components/TechUsed.astro";
+import ProgressiveWordReveal from "../components/ProgressiveWordReveal.astro";
+
+import { getCollection } from "astro:content";
+
+// Get all projects for skills section
+const allProjects = await getCollection("projects", ({ data }) => {
+  return data.draft !== true;
+});
+
+// Variabel untuk SEO
+const title = "About - Dimas Adi Saputra | Data Enthusiast";
+const description =
+  "Learn more about Dimas Adi Saputra, a data enthusiast passionate about web scraping, data analysis, and turning ideas into impactful solutions.";
+
+// Experience data
+const experiences = [
+  {
+    title: "Data Engineer Intern",
+    company: "Alpha Data Labs",
+    location: "Remote",
+    period: "December 2024 – Present",
+    responsibilities: [
+      "Working on social media data projects involving data scraping, relevance classification, and sentiment analysis",
+      "Analyzing data for clients including beauty brands, SOEs, and political campaigns",
+      "Building clear visualizations using Python, Pandas, Seaborn, and Matplotlib",
+      "Contributing to the development of a WhatsApp chatbot for government feedback",
+    ],
+  },
+  {
+    title: "Data Engineer Intern",
+    company: "Nolimit Indonesia",
+    location: "Bandung",
+    period: "June 2023 – November 2023",
+    responsibilities: [
+      "Developed scraper solutions for media websites, TikTok, and Google Maps reviews",
+      "Maintained and optimized web scrapers to ensure data accuracy and performance",
+      "Collaborated with analysts and engineers to improve business data accessibility",
+    ],
+  },
+];
+
+// Values data
+const values = [
+  {
+    icon: "📚",
+    title: "Continuous Learning",
+    description: "I believe in staying curious and always learning new technologies and methodologies to solve problems more effectively.",
+    gradient: "from-poppy/10 to-poppy/5",
+    iconBg: "bg-poppy/20",
+  },
+  {
+    icon: "🧩",
+    title: "Problem Solving",
+    description: "I love tackling complex challenges and finding creative solutions that make a real difference in how we understand and use data.",
+    gradient: "from-blue-crayola/10 to-blue-crayola/5",
+    iconBg: "bg-blue-crayola/20",
+  },
+  {
+    icon: "🤝",
+    title: "Community",
+    description: "Sharing knowledge and collaborating with others is essential for growth and making technology more accessible to everyone.",
+    gradient: "from-poppy/10 to-blue-crayola/10",
+    iconBg: "bg-gradient-to-r from-poppy/20 to-blue-crayola/20",
+  },
+];
+---m
+
+<Layout title={title} description={description}>
+  <main class="mt-24 sm:mt-32">
+    <!-- Hero Section -->
+    <div
+      id="hero"
+      class="flex flex-col items-center justify-center gap-8 w-full max-w-4xl mx-auto text-center px-6 animate-fade-in-up"
+    >
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-poppy/10 to-blue-crayola/10 border border-poppy/20 backdrop-blur-sm">
+        <span class="text-sm font-medium text-gray-700">Get to know me</span>
+      </div>
+
+      <h1 class="text-5xl sm:text-6xl lg:text-7xl text-black-alt font-extrabold leading-tight">
+        About <span class="text-transparent bg-clip-text bg-gradient-to-r from-poppy to-red-600">Me</span> and My <span
+          class="text-transparent bg-clip-text bg-gradient-to-r from-blue-crayola to-blue-600">Journey</span
+        > <span class="inline-block animate-bounce-slow">🚀</span>
+      </h1>
+      
+      <h2
+      class="font-light text-lg sm:text-xl text-gray-600 w-full sm:w-3/4 leading-relaxed animate-fade-in-up animation-delay-200"
+    >
+    Get to know me better all is on this page
+    </h2>
+    </div>
+
+    <section
+  id="introduction"
+  class="mt-26 w-full max-w-4xl mx-auto text-center px-6"
+>
+  <div class="relative">
+    <div
+      class="absolute -top-12 left-1/2 -translate-x-1/2 text-8xl opacity-25 pointer-events-none"
+    >
+      🫠
+    </div>
+    <h2 class="text-4xl sm:text-5xl font-bold text-black-alt mb-8 relative">
+      My Story
+    </h2>
+                <ProgressiveWordReveal
+              text="I'm a Data Engineer with hands-on experience building data pipelines and web scraping solutions. Currently working as a Data Engineer Intern at Alpha Data Labs, where I work on social media data projects involving data scraping, relevance classification, and sentiment analysis. My journey started at Nolimit Indonesia, where I developed scraper solutions for media websites, TikTok, and Google Maps reviews. I've built everything from marketplace comparison tools using BeautifulSoup and FastAPI to TikTok comment scrapers that stream data to Kafka. I graduated from Madiun State Polytechnic with a 3.80 GPA in Information Technology. I specialize in Python, data visualization with Pandas and Matplotlib, and building ETL pipelines. I'm passionate about leveraging data for automation and smarter business decisions, whether it's analyzing data for beauty brands, SOEs, or political campaigns."
+    class="text-xl sm:text-2xl text-gray-600 leading-relaxed font-light text-center"
+
+              />
+  </div>
+</section>
+
+
+    <!-- Tech Stack Section -->
+    <TechUsed />
+
+    <!-- Experience Section -->
+    <section id="experience" class="mt-32 sm:mt-48 w-full max-w-5xl mx-auto px-6">
+      <div class="relative mb-16">
+        <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-8xl opacity-5 pointer-events-none">💼</div>
+        <h2 class="text-4xl sm:text-5xl font-bold text-black-alt text-center relative">
+          Professional Experience
+        </h2>
+      </div>
+
+      <div class="space-y-8">
+        {experiences.map((exp, index) => (
+          <div 
+            class="group bg-white/80 rounded-3xl shadow-xl p-8 border border-gray-200 hover:shadow-2xl hover:border-blue-crayola/30 transition-all duration-500 relative overflow-hidden"
+            style={`animation: fadeInUp 0.6s ease-out ${index * 0.2}s both;`}
+          >
+            <!-- Gradient overlay on hover -->
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-crayola/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+            
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-6 relative">
+              <div class="flex-1">
+                <h3 class="text-xl sm:text-2xl font-bold text-black-alt mb-2 group-hover:text-blue-crayola transition-colors duration-300">
+                  {exp.title}
+                </h3>
+                <p class="text-blue-crayola font-semibold mb-1 text-lg">
+                  {exp.company}
+                </p>
+                <p class="text-gray-500 text-sm">
+                  {exp.location}
+                </p>
+              </div>
+              <span class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-crayola/10 to-purple-500/10 text-gray-700 rounded-full text-sm font-medium mt-4 md:mt-0 border border-blue-crayola/20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                </svg>
+                {exp.period}
+              </span>
+            </div>
+            
+            <ul class="space-y-3 text-gray-700 relative">
+              {exp.responsibilities.map((resp) => (
+                <li class="flex items-start gap-3 group/item">
+                  <span class="flex-shrink-0 w-2 h-2 bg-gradient-to-r from-poppy to-blue-crayola rounded-full mt-2 group-hover/item:scale-125 transition-transform duration-300"></span>
+                  <span class="leading-relaxed">{resp}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="mt-32 sm:mt-48 w-full max-w-4xl mx-auto px-6">
+      <div class="relative mb-16">
+        <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-8xl opacity-5 pointer-events-none">🎓</div>
+        <h2 class="text-4xl sm:text-5xl font-bold text-black-alt text-center relative">
+          Education
+        </h2>
+      </div>
+
+      <div class="group bg-gradient-to-br from-white to-blue-crayola/5 rounded-3xl shadow-xl p-12 border border-gray-200 text-center hover:shadow-2xl transition-all duration-500 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-crayola/5 to-poppy/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        
+        <div class="relative">
+          <h3 class="text-3xl font-bold text-black-alt mb-3">
+            Madiun State Polytechnic
+          </h3>
+          <p class="text-blue-crayola font-semibold mb-2 text-lg">
+            Associate's Degree in Information Technology
+          </p>
+          <p class="text-gray-600 mb-6 text-lg">2021 - 2024</p>
+          <div class="inline-flex items-center gap-2 bg-gradient-to-r from-poppy to-red-600 text-white px-6 py-3 rounded-xl shadow-lg shadow-poppy/30 font-semibold">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            <span>GPA: 3.80 / 4.00</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values Section -->
+    <section id="interests" class="mt-32 sm:mt-48 w-full max-w-5xl mx-auto px-6">
+      <div class="relative mb-16">
+        <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-8xl opacity-5 pointer-events-none">💡</div>
+        <h2 class="text-4xl sm:text-5xl font-bold text-black-alt text-center relative">
+          What Drives Me
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {values.map((value, index) => (
+          <div
+            class={`group bg-gradient-to-br ${value.gradient} rounded-3xl p-8 text-center hover:shadow-2xl transition-all duration-500 border border-white/50 hover:-translate-y-2`}
+            style={`animation: fadeInUp 0.6s ease-out ${index * 0.15}s both;`}
+          >
+            <div class={`w-16 h-16 ${value.iconBg} rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
+              <span class="text-3xl">{value.icon}</span>
+            </div>
+            <h3 class="text-xl font-bold text-black-alt mb-4 group-hover:text-blue-crayola transition-colors duration-300">
+              {value.title}
+            </h3>
+            <p class="text-gray-700 leading-relaxed">
+              {value.description}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+</Layout>

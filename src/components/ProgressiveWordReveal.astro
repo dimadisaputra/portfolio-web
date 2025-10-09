@@ -1,0 +1,69 @@
+---
+// src/components/ProgressiveWordReveal.astro
+interface Props {
+  text: string;
+  class?: string;
+}
+
+const { text, class: customClass = "" } = Astro.props;
+const words = text
+  .split(" ")
+  .map((word) => `<span class="word">${word}</span>`)
+  .join(" ");
+---
+
+<p
+  class={`progressive-reveal-container flex flex-wrap gap-1 ${customClass}`}
+  set:html={words}
+/>
+
+<style is:global>
+  @reference "../styles/global.css";
+  .progressive-reveal-container .word {
+    @apply text-gray-400 opacity-100 translate-y-0 transition-all duration-500 ease-out;
+  }
+  .progressive-reveal-container .word.is-revealed {
+    @apply text-gray-700 opacity-100 translate-y-0;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const containers = document.querySelectorAll<HTMLElement>(
+      ".progressive-reveal-container"
+    );
+    if (containers.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const target = entry.target as HTMLElement;
+          const words = target.querySelectorAll("span.word");
+          if (words.length === 0) return;
+
+          // Pastikan tetap reveal bertahap
+          const progress = Math.min(entry.intersectionRatio, 1);
+          const wordCount = words.length;
+          const wordsToShow = Math.round(progress * wordCount);
+
+          words.forEach((word, index) => {
+            if (index < wordsToShow) {
+              word.classList.add("is-revealed");
+            }
+          });
+
+          // Jangan unobserve, biarkan update terus selama discroll
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px -10% 0px", // biar ratio bisa sampai 1
+        threshold: Array.from({ length: 101 }, (_, i) => i / 100),
+      }
+    );
+
+    containers.forEach((container) => {
+      observer.observe(container);
+    });
+  });
+</script>

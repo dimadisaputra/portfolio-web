@@ -1,0 +1,59 @@
+---
+import ProjectCard from "../components/ProjectCard.astro";
+
+import { getCollection } from "astro:content";
+
+const allProjects = await getCollection("projects", ({ data }) => {
+  return data.draft !== true;
+});
+const sortedProjects = allProjects.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const latestProjects = sortedProjects.slice(0, 3);
+---
+
+<section
+  id="projects"
+  class="mt-48 sm:mt-64 w-full max-w-7xl mx-auto text-center px-6 pb-32"
+>
+  <div class="relative mb-16">
+    <div
+      class="absolute -top-12 left-1/2 -translate-x-1/2 text-8xl opacity-25 pointer-events-none"
+    >
+      💼
+    </div>
+
+    <h1 class="text-4xl sm:text-5xl font-bold text-black-alt mb-4 relative">
+      Latest Projects
+    </h1>
+
+    <p class="text-gray-600 text-lg">
+      Some of my recent work that I'm proud of
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    {
+      latestProjects.map((project, index) => (
+        <div style={`animation: fadeInUp 0.6s ease-out ${index * 0.15}s both;`}>
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            image={project.data.image}
+            imageAlt={project.data.imageAlt}
+            slug={project.slug}
+            category={project.data.category}
+          />
+        </div>
+      ))
+    }
+  </div>
+  <div class="flex flex-col sm:flex-row gap-4 justify-center mt-12">
+    <a
+      href="/projects"
+      class="group relative text-center font-semibold rounded-2xl border-2 border-blue-crayola text-blue-crayola px-8 py-4 hover:bg-blue-crayola hover:text-white hover:shadow-xl hover:shadow-blue-crayola/30 hover:-translate-y-1 transition-all duration-300 inline-flex items-center justify-center"
+    >
+      <span class="inline-flex items-center gap-2">📁 View All Projects</span>
+    </a>
+  </div>
+</section>

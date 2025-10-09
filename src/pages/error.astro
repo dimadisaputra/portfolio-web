@@ -1,0 +1,54 @@
+---
+// src/pages/error.astro
+import ErrorLayout from "../layouts/ErrorLayout.astro";
+
+// Get error details from query params or use defaults
+const url = Astro.url;
+const errorCode = url.searchParams.get("code") || "Error";
+const errorTitle = url.searchParams.get("title") || "Something went wrong";
+const errorMessage =
+  url.searchParams.get("message") || "An unexpected error occurred";
+
+// Variabel untuk SEO
+const title = `${errorCode} - ${errorTitle} | Dimas Adi Saputra`;
+const description = `Oops! ${errorMessage}`;
+---
+
+<ErrorLayout title={title} description={description}>
+  <main class="mt-24 sm:mt-32 animate-fade-in-up">
+    <!-- Hero Section -->
+    <div
+      id="hero"
+      class="flex flex-col items-center justify-center gap-8 w-full max-w-4xl mx-auto text-center px-6"
+    >
+      <div class="relative">
+        <div
+          class="text-8xl sm:text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-orange-500/30 to-poppy/30 mb-4 select-none animate-pulse-slow"
+        >
+          {errorCode}
+        </div>
+        <div
+          class="absolute inset-0 text-8xl sm:text-9xl font-extrabold text-orange-500/10 blur-2xl -z-10"
+        >
+          {errorCode}
+        </div>
+      </div>
+
+      <h1
+        class="text-4xl sm:text-5xl lg:text-6xl text-black-alt font-extrabold leading-tight"
+      >
+        Oops! <span
+          class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-poppy"
+          >{errorTitle}</span
+        >
+        <span class="inline-block animate-shake">⚠️</span>
+      </h1>
+
+      <h2
+        class="text-lg sm:text-xl text-gray-600 w-full sm:w-3/4 leading-relaxed"
+      >
+        {errorMessage}
+      </h2>
+    </div>
+  </main>
+</ErrorLayout>
