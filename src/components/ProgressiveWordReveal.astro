@@ -20,7 +20,7 @@ const words = text
 <style is:global>
   @reference "../styles/global.css";
   .progressive-reveal-container .word {
-    @apply text-gray-400 opacity-100 translate-y-0 transition-all duration-500 ease-out;
+    @apply text-gray-400 opacity-50 translate-y-1 transition-all duration-500 ease-out;
   }
   .progressive-reveal-container .word.is-revealed {
     @apply text-gray-700 opacity-100 translate-y-0;
@@ -41,23 +41,29 @@ const words = text
           const words = target.querySelectorAll("span.word");
           if (words.length === 0) return;
 
-          // Pastikan tetap reveal bertahap
-          const progress = Math.min(entry.intersectionRatio, 1);
+          // Ketika fully visible, reveal semua
+          if (entry.intersectionRatio >= 0.9) {
+            words.forEach((word) => {
+              word.classList.add("is-revealed");
+            });
+            return;
+          }
+
+          // Progressive reveal berdasarkan scroll position
+          const progress = Math.max(0, Math.min(entry.intersectionRatio, 1));
           const wordCount = words.length;
-          const wordsToShow = Math.round(progress * wordCount);
+          const wordsToShow = Math.ceil(progress * wordCount);
 
           words.forEach((word, index) => {
             if (index < wordsToShow) {
               word.classList.add("is-revealed");
             }
           });
-
-          // Jangan unobserve, biarkan update terus selama discroll
         });
       },
       {
         root: null,
-        rootMargin: "0px 0px -10% 0px", // biar ratio bisa sampai 1
+        rootMargin: "0px 0px -5% 0px",
         threshold: Array.from({ length: 101 }, (_, i) => i / 100),
       }
     );
