@@ -7,7 +7,7 @@ pubDate: 2025-09-01
 updatedDate: 2025-09-01
 canonicalURL: "https://dimadisaputra.vercel.app/projects/social-media-report-automation"
 draft: false
-image: "../_images/social-media-report-automation.png"
+image: "../_images/social-media-report-automation.jpg"
 imageAlt: "Thumbnail of the Social Media Report Automation project"
 category: "Data & AI"
 tags: ["Python", "Google Workspace API", "OpenAI", "NLP", "Matplotlib", "Seaborn", "NumPy"]
