@@ -3,86 +3,63 @@
 interface Props {
   text: string;
   class?: string;
+  delayStep?: number;
 }
 
-const { text, class: customClass = "" } = Astro.props;
+const { text, class: customClass = "", delayStep = 5 } = Astro.props;
+
 const words = text
   .split(" ")
-  .map((word) => `<span class="word">${word}</span>`)
+  .map(
+    (word, index) =>
+      `<span class="word" style="--delay:${index * delayStep}ms">${word}</span>`
+  )
   .join(" ");
 ---
 
 <p
-  class={`progressive-reveal-container flex flex-wrap gap-1 ${customClass}`}
+  class={`progressive-reveal-container flex flex-wrap gap-x-2 gap-y-1 ${customClass}`}
   set:html={words}
 />
 
 <style is:global>
   @reference "../styles/global.css";
   .progressive-reveal-container .word {
-    @apply text-gray-400 opacity-50 translate-y-1 transition-all duration-500 ease-out;
+    --delay: 0ms; /* Default delay */
+    opacity: 0.15;
+    transform: translateY(10px);
+    transition:
+      opacity 0.4s ease-out,
+      transform 0.4s ease-out;
+    transition-delay: var(--delay);
   }
   .progressive-reveal-container .word.is-revealed {
-    @apply text-gray-700 opacity-100 translate-y-0;
+    opacity: 1;
+    transform: translateY(0);
   }
 </style>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const containers = document.querySelectorAll<HTMLElement>(
-      ".progressive-reveal-container"
-    );
-    if (containers.length === 0) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const target = entry.target as HTMLElement;
-          const words = target.querySelectorAll("span.word");
-          if (words.length === 0) return;
-
           if (entry.isIntersecting) {
-            // Hitung posisi scroll relatif terhadap elemen
-            const rect = target.getBoundingClientRect();
-            const windowHeight = window.innerHeight;
-
-            // Jika elemen sudah melewati tengah viewport, reveal semua
-            if (rect.top < windowHeight * 0.5) {
-              words.forEach((word) => {
-                word.classList.add("is-revealed");
-              });
-              return;
-            }
-
-            // Progressive reveal
-            const elementHeight = rect.height;
-            const visibleHeight =
-              Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
-            const progress = Math.max(
-              0,
-              Math.min(visibleHeight / elementHeight, 1)
-            );
-
-            const wordCount = words.length;
-            const wordsToShow = Math.ceil(progress * wordCount);
-
-            words.forEach((word, index) => {
-              if (index < wordsToShow) {
-                word.classList.add("is-revealed");
-              }
-            });
+            entry.target.classList.add("is-revealed");
+            observer.unobserve(entry.target);
           }
         });
       },
       {
-        root: null,
-        rootMargin: "0px",
-        threshold: Array.from({ length: 21 }, (_, i) => i / 20), // Reduced thresholds for better mobile performance
+        rootMargin: "0px 0px -15% 0px",
       }
     );
 
-    containers.forEach((container) => {
-      observer.observe(container);
+    const wordsToObserve = document.querySelectorAll(
+      ".progressive-reveal-container .word"
+    );
+    wordsToObserve.forEach((word) => {
+      observer.observe(word);
     });
   });
 </script>
