@@ -74,14 +74,19 @@
                 { label: "Projects", href: "/projects" },
                 { label: "About", href: "/about" },
                 { label: "Contact", href: "/contact" },
-                { label: "Download CV", href: "/cv-dimas.pdf" },
+                {
+                  label: "Download CV",
+                  href: "/cv_dimas_adi_saputra_jan_2026.pdf",
+                },
               ].map((link) => (
                 <li>
                   <a
                     href={link.href}
                     class="text-gray-600 hover:text-blue-crayola transition-colors duration-300 inline-flex items-center gap-1 group"
                     download={
-                      link.label === "Download CV" ? "cv-dimas.pdf" : undefined
+                      link.label === "Download CV"
+                        ? "cv_dimas_adi_saputra_jan_2026.pdf"
+                        : undefined
                     }
                   >
                     <span>{link.label}</span>
