@@ -18,6 +18,7 @@ const projectsCollection = defineCollection({
 
       category: z.enum(["Data & AI", "Web & App", "Game", "Fun"]),
       tags: z.array(z.string()).optional(),
+      repoURL: z.string().url().optional(),
     }),
 });
 

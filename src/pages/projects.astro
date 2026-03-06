@@ -9,7 +9,7 @@ const allProjects = await getCollection("projects", ({ data }) => {
 });
 
 const sortedProjects = allProjects.sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
 // Ambil semua kategori unik dari proyek dan tambahkan "All" di depan
@@ -90,6 +90,7 @@ const description = "Browse all data projects by Dimas Adi Saputra";
                 imageAlt={project.data.imageAlt}
                 slug={project.slug}
                 category={project.data.category}
+                repoURL={project.data.repoURL}
               />
             </div>
           ))}
@@ -166,10 +167,10 @@ const description = "Browse all data projects by Dimas Adi Saputra";
   const filterButtons =
     document.querySelectorAll<HTMLButtonElement>("[data-filter-btn]");
   const projectCards = document.querySelectorAll<HTMLDivElement>(
-    "[data-project-card]"
+    "[data-project-card]",
   );
   const notFoundMessage = document.getElementById(
-    "not-found-message"
+    "not-found-message",
   ) as HTMLDivElement;
   const projectGrid = document.getElementById("project-grid");
 

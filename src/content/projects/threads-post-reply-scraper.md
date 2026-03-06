@@ -6,6 +6,7 @@ author: "Dimas Adi Saputra"
 pubDate: 2024-08-01
 updatedDate: 2024-08-15
 canonicalURL: "https://dimadisaputra.vercel.app/projects/threads-post-reply-scraper"
+repoURL: "https://github.com/dimadisaputra/threads-scraper"
 draft: false
 image: "../_images/threads-post-reply-scraper.jpg"
 imageAlt: "Diagram showing the data scraping process for Threads replies"

@@ -7,7 +7,7 @@ const allProjects = await getCollection("projects", ({ data }) => {
   return data.draft !== true;
 });
 const sortedProjects = allProjects.sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 const latestProjects = sortedProjects.slice(0, 3);
 ---
@@ -43,6 +43,7 @@ const latestProjects = sortedProjects.slice(0, 3);
             imageAlt={project.data.imageAlt}
             slug={project.slug}
             category={project.data.category}
+            repoURL={project.data.repoURL}
           />
         </div>
       ))
