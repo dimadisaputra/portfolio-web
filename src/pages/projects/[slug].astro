@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import { Image, getImage } from "astro:assets";
 import ProjectPreview from "../../components/ProjectPreview.astro";
@@ -9,7 +9,7 @@ export async function getStaticPaths() {
     return data.draft !== true;
   });
   return projects.map((project) => ({
-    params: { slug: project.slug },
+    params: { slug: project.id },
     props: { project },
   }));
 }
@@ -26,7 +26,7 @@ const {
   repoURL,
 } = project.data;
 
-const { Content } = await project.render();
+const { Content } = await render(project);
 
 // --- SEO & Structured Data ---
 const coverImageForSeo = await getImage({
