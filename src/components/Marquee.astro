@@ -1,0 +1,72 @@
+---
+interface Props {
+  items: string[];
+}
+const { items } = Astro.props;
+// Duplicated once so the loop can wrap seamlessly at -50%.
+const track = [...items, ...items];
+---
+
+<div class="marquee" aria-label={items.join(", ")}>
+  <div class="marquee-track" aria-hidden="true">
+    {
+      track.map((item) => (
+        <span class="marquee-item">
+          {item}
+          <span class="marquee-dot">/</span>
+        </span>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    border-block: 1px solid var(--rule);
+    padding-block: 1.125rem;
+    /* A plain looping translate — no scroll linkage, so CSS is enough and
+       costs nothing on the main thread. */
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 38s linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  .marquee-item {
+    display: inline-flex;
+    gap: 1.75rem;
+    padding-right: 1.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .marquee-dot {
+    color: var(--accent);
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Static, clipped row. The duplicate half simply stays off-screen. */
+    .marquee-track {
+      animation: none;
+    }
+  }
+</style>

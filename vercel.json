@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "de.dimadisaputra.com" }],
+      "destination": "/de/en"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "se.dimadisaputra.com" }],
+      "destination": "/se/en"
+    },
+    {
+      "source": "/((?!_astro/|favicon|.*\\.[a-z0-9]+$).*)",
+      "has": [{ "type": "host", "value": "de.dimadisaputra.com" }],
+      "destination": "/de/$1"
+    },
+    {
+      "source": "/((?!_astro/|favicon|.*\\.[a-z0-9]+$).*)",
+      "has": [{ "type": "host", "value": "se.dimadisaputra.com" }],
+      "destination": "/se/$1"
+    }
+  ]
+}
