@@ -1,0 +1,238 @@
+---
+import { render } from "astro:content";
+import Base from "../../../../layouts/Base.astro";
+import { href, t, type Face, type Lang } from "../../../../i18n";
+import {
+  angleOf,
+  projectPaths,
+  slugOf,
+  yearOf,
+  type Project,
+} from "../../../../lib/projects";
+
+export const getStaticPaths = projectPaths;
+
+interface Props {
+  entry: Project;
+  next: Project;
+}
+
+const { face, lang } = Astro.params as { face: Face; lang: Lang };
+const { entry, next } = Astro.props;
+const i = t(lang);
+const { Content } = await render(entry);
+
+const meta = [
+  { k: i.common.year, v: String(yearOf(entry)) },
+  { k: i.common.role, v: entry.data.category },
+  { k: i.common.stack, v: (entry.data.tags ?? []).join(", ") },
+];
+---
+
+<Base
+  face={face}
+  lang={lang}
+  title={entry.data.seoTitle ?? entry.data.title}
+  description={entry.data.description}
+>
+  <div class="progress" data-progress aria-hidden="true"></div>
+
+  <article>
+    <header class="head">
+      <a class="back label" href={href(face, lang, "/work")}>
+        ← {i.common.backToWork}
+      </a>
+      <h1
+        class="title display"
+        transition:name={`work-${slugOf(entry)}`}
+      >
+        {entry.data.title}
+      </h1>
+      <p class="angle">{angleOf(entry, face)}</p>
+    </header>
+
+    <div class="layout">
+      <aside class="meta">
+        <dl>
+          {
+            meta.map((m) => (
+              <div class="meta-row">
+                <dt class="label">{m.k}</dt>
+                <dd class="meta-value">{m.v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        {
+          entry.data.repoURL && (
+            <a
+              class="repo"
+              href={entry.data.repoURL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {i.common.source} ↗
+            </a>
+          )
+        }
+      </aside>
+
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+
+    <a class="next" href={href(face, lang, `/work/${slugOf(next)}`)}>
+      <span class="label">{i.common.next}</span>
+      <span class="next-title display">{next.data.title}</span>
+    </a>
+  </article>
+</Base>
+
+<style>
+  .progress {
+    position: fixed;
+    inset: 0 auto auto 0;
+    z-index: 60;
+    height: 2px;
+    width: 100%;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .head {
+    padding: clamp(7rem, 18vh, 11rem) clamp(1rem, 4vw, 2.5rem) 0;
+  }
+  .back {
+    display: inline-block;
+    margin-bottom: 2.5rem;
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--accent);
+  }
+  .title {
+    margin: 0;
+    font-size: clamp(2.5rem, 9vw, 7rem);
+    max-width: 18ch;
+  }
+  .angle {
+    margin: 1.25rem 0 0;
+    max-width: 46ch;
+    color: var(--muted);
+    font-size: 1.0625rem;
+    line-height: 1.5;
+  }
+
+  .layout {
+    display: grid;
+    gap: 3rem;
+    padding: clamp(3rem, 9vh, 6rem) clamp(1rem, 4vw, 2.5rem) 0;
+  }
+
+  .meta dl {
+    margin: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .meta-row {
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .meta-value {
+    margin: 0.375rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+  .repo {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  @media (min-width: 900px) {
+    .layout {
+      grid-template-columns: 15rem minmax(0, 1fr);
+      gap: 5rem;
+      align-items: start;
+    }
+    .meta {
+      position: sticky;
+      top: 6rem;
+    }
+  }
+
+  /* ---- rendered markdown ---- */
+
+  .prose {
+    max-width: 68ch;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+  .prose :global(h2) {
+    margin: 3rem 0 1rem;
+    font-family: var(--display);
+    font-weight: var(--display-weight);
+    letter-spacing: var(--display-tracking);
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1.1;
+  }
+  .prose :global(h3) {
+    margin: 2.25rem 0 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+  .prose :global(p),
+  .prose :global(li) {
+    color: var(--muted);
+  }
+  .prose :global(p) {
+    margin: 0 0 1.125rem;
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin: 0 0 1.5rem;
+    padding-left: 1.125rem;
+  }
+  .prose :global(li) {
+    margin-bottom: 0.5rem;
+  }
+  .prose :global(li)::marker {
+    color: var(--accent);
+  }
+  .prose :global(strong) {
+    color: var(--fg);
+    font-weight: 500;
+  }
+  .prose :global(a) {
+    color: var(--accent);
+  }
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--fg);
+  }
+
+  .next {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    margin-top: clamp(5rem, 14vh, 9rem);
+    padding: clamp(3rem, 8vh, 5rem) clamp(1rem, 4vw, 2.5rem);
+    border-top: 1px solid var(--rule);
+    text-decoration: none;
+    color: inherit;
+  }
+  .next-title {
+    font-size: clamp(2rem, 7vw, 5rem);
+    transition: color 0.35s;
+  }
+  .next:hover .next-title {
+    color: var(--accent);
+  }
+</style>

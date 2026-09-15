@@ -1,19 +1,286 @@
 ---
-import Hero from "../components/Hero.astro";
-import Intro from "../components/Intro.astro";
-import TechUsed from "../components/TechUsed.astro";
-import ProjectPreview from "../components/ProjectPreview.astro";
-import Layout from "../layouts/Layout.astro";
+import { Font } from "astro:assets";
+import "../styles/global.css";
+import en from "../i18n/en";
+import id from "../i18n/id";
+import { DEFAULT_LANG, FACES, faceHref } from "../i18n";
+import { FACE_DOMAIN } from "../site-config";
+import { NAME } from "../data/site";
 
-const title = "Dimas - Data Enthusiast Portfolio";
+// The gateway is the only page that shows both faces at once, so it cannot
+// use the `data-face` token swap. Each panel carries its own palette.
+const panels = FACES.map((face) => ({
+  face,
+  en: en.faces[face],
+  id: id.faces[face],
+}));
 
+const title = `${NAME} — Data Engineer & Software Engineer`;
 const description =
-  "Explore data projects and insights from Dimas Adi Saputra, a data engineer specializing in web scraping, data pipelines, and analysis.";
+  "Data Engineer and Software Engineer. Two disciplines, one operator. Pick a door.";
 ---
 
-<Layout title={title} description={description}>
-  <Hero />
-  <Intro />
-  <TechUsed />
-  <ProjectPreview />
-</Layout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+
+    <Font cssVariable="--font-mono" preload />
+    <Font cssVariable="--font-serif" preload />
+    <Font cssVariable="--font-sans" />
+
+    <script is:inline define:vars={{ FACE_DOMAIN }}>
+      // Returning visitors skip the door they already chose. `?stay` opens the
+      // gateway anyway, and the face switch in the nav is always available.
+      try {
+        const face = localStorage.getItem("face");
+        const lang = localStorage.getItem("lang") || "en";
+        if (
+          (face === "de" || face === "se") &&
+          !location.search.includes("stay")
+        ) {
+          location.replace(
+            FACE_DOMAIN
+              ? `https://${face}.${FACE_DOMAIN}/${lang}`
+              : `/${face}/${lang}`,
+          );
+        }
+      } catch (_) {}
+    </script>
+  </head>
+
+  <body>
+    <main class="gate">
+      <h1 class="gate-name">
+        <span class="gate-name-text">{NAME}</span>
+      </h1>
+
+      {
+        panels.map(({ face, en: e, id: d }) => (
+          <a
+            class:list={["panel", `panel-${face}`]}
+            href={faceHref(face, DEFAULT_LANG)}
+            data-face-choice={face}
+          >
+            <span class="panel-index">{face.toUpperCase()}</span>
+            <span class="panel-body">
+              <span class="panel-kicker">{e.kicker}</span>
+              <span class="panel-role">{e.role}</span>
+              <span class="panel-line">{e.statement}</span>
+              <span class="panel-line panel-line-id" lang="id">
+                {d.statement}
+              </span>
+            </span>
+            <span class="panel-enter">{en.gateway.enter} →</span>
+          </a>
+        ))
+      }
+
+      <p class="gate-hint">{en.gateway.prompt} · {en.gateway.hint}</p>
+    </main>
+
+    <script>
+      // Remember the choice so the next visit lands straight inside.
+      document.querySelectorAll<HTMLElement>("[data-face-choice]").forEach((el) => {
+        el.addEventListener("click", () => {
+          try {
+            localStorage.setItem("face", el.dataset.faceChoice!);
+          } catch (_) {}
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  :root {
+    --de-bg: #0b0b0b;
+    --de-fg: #e6e6e1;
+    --de-accent: #c8ff4d;
+    --se-bg: #f4f1ea;
+    --se-fg: #141210;
+    --se-accent: #ff3b14;
+  }
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
+
+  .gate {
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+  }
+
+  .gate-name {
+    position: fixed;
+    z-index: 10;
+    top: 1.125rem;
+    left: 50%;
+    translate: -50% 0;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    mix-blend-mode: difference;
+    color: #fff;
+  }
+
+  .gate-hint {
+    position: fixed;
+    z-index: 10;
+    bottom: 1.125rem;
+    left: 50%;
+    translate: -50% 0;
+    margin: 0;
+    padding-inline: 1rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    mix-blend-mode: difference;
+    color: #fff;
+  }
+
+  /* ---- panels ---- */
+
+  .panel {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    padding: clamp(2rem, 5vw, 4rem);
+    text-decoration: none;
+    overflow: hidden;
+    transition: flex-grow 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .panel-de {
+    background: var(--de-bg);
+    color: var(--de-fg);
+    font-family: var(--font-mono);
+    /* hairline column grid, same motif as the DE site */
+    background-image: repeating-linear-gradient(
+      to right,
+      rgb(255 255 255 / 0.05) 0 1px,
+      transparent 1px 8.333%
+    );
+  }
+  .panel-se {
+    background: var(--se-bg);
+    color: var(--se-fg);
+    font-family: var(--font-sans);
+  }
+
+  .panel-index {
+    position: absolute;
+    top: clamp(2rem, 5vw, 4rem);
+    left: clamp(2rem, 5vw, 4rem);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    opacity: 0.5;
+  }
+
+  .panel-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 34ch;
+  }
+
+  .panel-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .panel-de .panel-kicker {
+    color: var(--de-accent);
+  }
+  .panel-se .panel-kicker {
+    color: var(--se-accent);
+  }
+
+  .panel-role {
+    font-size: clamp(2.25rem, 6vw, 4.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+  }
+  .panel-de .panel-role {
+    font-weight: 500;
+  }
+  .panel-se .panel-role {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  .panel-line {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    opacity: 0.7;
+  }
+  .panel-line-id {
+    display: none;
+    opacity: 0.45;
+  }
+
+  .panel-enter {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0;
+    translate: -0.75rem 0;
+    transition:
+      opacity 0.5s,
+      translate 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (min-width: 768px) {
+    .gate {
+      flex-direction: row;
+    }
+    .panel-line-id {
+      display: block;
+    }
+    /* Hovering one door opens it and lets the other recede. */
+    .gate:has(.panel:hover) .panel {
+      flex-grow: 0.72;
+    }
+    .gate .panel:hover {
+      flex-grow: 1.56;
+    }
+    .panel:hover .panel-enter,
+    .panel:focus-visible .panel-enter {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panel,
+    .panel-enter {
+      transition: none;
+    }
+    .panel-enter {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+</style>

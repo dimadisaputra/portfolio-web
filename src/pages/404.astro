@@ -1,103 +1,87 @@
 ---
-// src/pages/404.astro
-import ErrorLayout from "../layouts/ErrorLayout.astro";
+import Base from "../layouts/Base.astro";
+import { DEFAULT_FACE, DEFAULT_LANG, faceHref, t } from "../i18n";
+import { FACE_DOMAIN } from "../site-config";
 
-const title = "404 - Page Not Found | Dimas Adi Saputra";
-const description =
-  "Oops! The page you're looking for doesn't exist. Let's get you back on track.";
+// A static 404 is served for any path, so it cannot know the face at build
+// time. It renders in the default face and corrects itself below.
+const i = t(DEFAULT_LANG);
 ---
 
-<ErrorLayout title={title} description={description}>
-  <main class="mt-24 sm:mt-32 animate-fade-in-up">
-    <div
-      id="hero"
-      class="flex flex-col items-center justify-center gap-8 w-full max-w-4xl mx-auto text-center px-6"
+<Base
+  face={DEFAULT_FACE}
+  lang={DEFAULT_LANG}
+  title={i.notFound.title}
+  description={i.notFound.body}
+  bare
+>
+  <section class="lost">
+    <p class="label">404</p>
+    <h1 class="lost-title display">{i.notFound.title}</h1>
+    <p class="lost-body">{i.notFound.body}</p>
+    <a
+      class="lost-home label"
+      id="home"
+      href={faceHref(DEFAULT_FACE, DEFAULT_LANG)}
     >
-      <div class="relative">
-        <div
-          class="text-9xl sm:text-[12rem] font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-poppy/30 to-blue-crayola/30 mb-4 select-none animate-pulse-slow"
-        >
-          404
-        </div>
-        <div
-          class="absolute inset-0 text-9xl sm:text-[12rem] font-extrabold text-poppy/10 blur-2xl -z-10"
-        >
-          404
-        </div>
-      </div>
+      {i.notFound.home} →
+    </a>
+  </section>
+</Base>
 
-      <h1
-        class="text-4xl sm:text-5xl lg:text-6xl text-black-alt font-extrabold leading-tight"
-      >
-        Oops! <span
-          class="text-transparent bg-clip-text bg-gradient-to-r from-poppy to-red-600"
-          >Page Not Found</span
-        >
-        <span class="inline-block animate-bounce-slow">😅</span>
-      </h1>
+<script is:inline define:vars={{ FACE_DOMAIN }}>
+  // Keep whichever face and language the broken URL was already in, so a dead
+  // link on the SE site does not throw you onto the DE one.
+  //
+  // The path has two possible shapes: `/de/en/…` locally, and `/en/…` on a
+  // face subdomain, where the face is in the hostname instead.
+  {
+    const parts = location.pathname.split("/").filter(Boolean);
+    const face =
+      parts[0] === "de" || parts[0] === "se"
+        ? parts.shift()
+        : location.hostname.split(".")[0];
+    const lang = parts[0] === "en" || parts[0] === "id" ? parts[0] : "en";
 
-      <a
-        href="/"
-        class="group inline-flex items-center text-gray-700 hover:text-poppy transition-all duration-300 font-semibold px-6 py-3 rounded-xl border border-gray-200 hover:border-poppy/30 hover:shadow-lg hover:shadow-poppy/10 hover:-translate-y-1"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-            clip-rule="evenodd"></path>
-        </svg>
-        <span>Home</span>
-      </a>
-    </div>
-  </main>
-</ErrorLayout>
+    const root = document.documentElement;
+    if (face === "de" || face === "se") root.dataset.face = face;
+    root.lang = lang;
+    root.dataset.lang = lang;
+
+    const home = document.getElementById("home");
+    if (home) {
+      const f = root.dataset.face || "de";
+      home.setAttribute(
+        "href",
+        FACE_DOMAIN ? `https://${f}.${FACE_DOMAIN}/${lang}` : `/${f}/${lang}`,
+      );
+    }
+  }
+</script>
 
 <style>
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .lost {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    min-height: 100svh;
+    padding: 4rem clamp(1rem, 4vw, 2.5rem);
   }
-
-  @keyframes pulseSlow {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.6;
-    }
+  .lost-title {
+    margin: 0;
+    font-size: clamp(4rem, 22vw, 18rem);
+    text-transform: uppercase;
   }
-
-  @keyframes bounce-slow {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
+  .lost-body {
+    margin: 0;
+    max-width: 40ch;
+    color: var(--muted);
+    font-size: 1.0625rem;
   }
-
-  .animate-fade-in-up {
-    animation: fadeInUp 0.8s ease-out;
-  }
-
-  .animate-pulse-slow {
-    animation: pulseSlow 3s ease-in-out infinite;
-  }
-
-  .animate-bounce-slow {
-    animation: bounce-slow 2s ease-in-out infinite;
+  .lost-home {
+    margin-top: 2rem;
+    color: var(--accent);
+    text-decoration: none;
   }
 </style>

@@ -1,0 +1,202 @@
+---
+import { Font } from "astro:assets";
+import { ClientRouter } from "astro:transitions";
+import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import { LANGS, canonical, subPath, t, type Face, type Lang } from "../i18n";
+
+interface Props {
+  face: Face;
+  lang: Lang;
+  title: string;
+  description: string;
+  /** Gateway and the print CV render without nav, footer or smooth scroll. */
+  bare?: boolean;
+}
+
+const { face, lang, title, description, bare = false } = Astro.props;
+
+const i = t(lang);
+const sub = subPath(Astro.url.pathname);
+const self = canonical(Astro.site, face, lang, sub);
+
+// One card per face and language, generated at build time by
+// `src/pages/og/[face]/[lang].png.ts`. It sits outside the face prefix, which
+// the `vercel.json` rewrite already excludes because it ends in a file
+// extension. Must be absolute — scrapers do not resolve relative URLs.
+const ogImage = new URL(`/og/${face}/${lang}.png`, new URL(self)).href;
+---
+
+<!doctype html>
+<html lang={lang} data-face={face} data-lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href={`/favicon-${face}.svg`} />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title} — Dimas Adi Saputra</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={self} />
+
+    {
+      LANGS.map((l) => (
+        <link
+          rel="alternate"
+          hreflang={l}
+          href={canonical(Astro.site, face, l, sub)}
+        />
+      ))
+    }
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={canonical(Astro.site, face, "en", sub)}
+    />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={self} />
+    <meta property="og:locale" content={i.meta.locale} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${title} — ${i.faces[face].role}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
+
+    <Font cssVariable="--font-mono" preload />
+    <Font cssVariable="--font-sans" preload={face === "se"} />
+    <Font cssVariable="--font-serif" preload={face === "se"} />
+
+    <ClientRouter />
+
+    <script is:inline>
+      // Runs before first paint so revealed elements never flash in and out.
+      // The timeout is the failsafe: if the motion bundle fails to load, the
+      // page must not be left blank.
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.dataset.motion = "on";
+        setTimeout(() => {
+          if (!document.documentElement.dataset.motionReady)
+            document.documentElement.removeAttribute("data-motion");
+        }, 2500);
+      }
+    </script>
+  </head>
+
+  <body>
+    <a href="#main" class="skip-link">{i.nav.skipToContent}</a>
+
+    {/* Fixed layers live outside #smooth-wrapper — ScrollSmoother transforms
+        the content, which would break position: fixed inside it. */}
+    {
+      face === "de" ? (
+        <div class="grid-overlay pointer-events-none fixed inset-0 z-0" aria-hidden="true" />
+      ) : (
+        <div class="grain pointer-events-none fixed inset-0 z-0" aria-hidden="true" />
+      )
+    }
+
+    {!bare && <Nav face={face} lang={lang} />}
+    <div id="cursor" aria-hidden="true"></div>
+
+    {
+      bare ? (
+        <main id="main">
+          <slot />
+        </main>
+      ) : (
+        <div id="smooth-wrapper">
+          <div id="smooth-content">
+            <main id="main">
+              <slot />
+            </main>
+            <Footer face={face} lang={lang} />
+          </div>
+        </div>
+      )
+    }
+
+    <script>
+      import "../scripts/motion";
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 100;
+    padding: 0.5rem 0.875rem;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transform: translateY(-200%);
+    transition: transform 0.2s;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+
+  /* Film grain, SE only. One inline SVG turbulence, no image request. */
+  .grain {
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  #cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 90;
+    display: grid;
+    place-items: center;
+    width: 10px;
+    height: 10px;
+    margin: -5px 0 0 -5px;
+    border-radius: 999px;
+    background: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    white-space: nowrap;
+    pointer-events: none;
+    mix-blend-mode: difference;
+    transition:
+      width 0.3s,
+      height 0.3s,
+      margin 0.3s;
+  }
+  #cursor[data-state="hover"] {
+    width: 44px;
+    height: 44px;
+    margin: -22px 0 0 -22px;
+  }
+  #cursor[data-state="label"] {
+    width: 88px;
+    height: 88px;
+    margin: -44px 0 0 -44px;
+    mix-blend-mode: normal;
+  }
+  /* No custom cursor on touch, and none when motion is off. */
+  @media (pointer: coarse) {
+    #cursor {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #cursor {
+      display: none;
+    }
+  }
+</style>

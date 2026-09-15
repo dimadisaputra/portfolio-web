@@ -1,0 +1,128 @@
+---
+import { href, t, type Face, type Lang } from "../i18n";
+import { angleOf, slugOf, yearOf, type Project } from "../lib/projects";
+
+interface Props {
+  projects: Project[];
+  face: Face;
+  lang: Lang;
+  /** Continue numbering across sections (the home page shows a subset). */
+  startIndex?: number;
+}
+
+const { projects, face, lang, startIndex = 1 } = Astro.props;
+const i = t(lang);
+const pad = (n: number) => String(n).padStart(2, "0");
+---
+
+<div class="worklist" data-worklist>
+  <ul class="rows">
+    {
+      projects.map((p, n) => (
+        <li class="row-item">
+          <a
+            class="row"
+            href={href(face, lang, `/work/${slugOf(p)}`)}
+            data-cursor={i.common.source}
+          >
+            <span class="row-index label">{pad(startIndex + n)}</span>
+            <span class="row-main">
+              <span
+                class="row-title display"
+                transition:name={`work-${slugOf(p)}`}
+              >
+                {p.data.title}
+              </span>
+              <span class="row-angle">{angleOf(p, face)}</span>
+            </span>
+            <span class="row-meta">
+              <span class="label">{yearOf(p)}</span>
+              <span class="row-stack">{(p.data.tags ?? []).slice(0, 3).join(" · ")}</span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .worklist {
+    position: relative;
+  }
+
+  .rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .row-item {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: 0.75rem 1.5rem;
+    padding: clamp(1.25rem, 3vw, 2.25rem) 0;
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.4s;
+  }
+  .row:hover {
+    color: var(--accent);
+  }
+
+  .row-index {
+    align-self: start;
+    padding-top: 0.6em;
+  }
+
+  .row-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 0;
+  }
+
+  .row-title {
+    font-size: clamp(1.75rem, 5.5vw, 4rem);
+  }
+
+  .row-angle {
+    max-width: 46ch;
+    color: var(--muted);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  .row-meta {
+    grid-column: 2;
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  .row-stack {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  @media (min-width: 900px) {
+    .row {
+      grid-template-columns: 4rem 1fr auto;
+      gap: 2rem;
+    }
+    .row-meta {
+      grid-column: auto;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.375rem;
+      text-align: right;
+    }
+  }
+</style>

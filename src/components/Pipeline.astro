@@ -1,0 +1,104 @@
+---
+/**
+ * DE-face hero background: a schematic DAG, drawn the way a pipeline diagram
+ * is drawn. Replaces the decorative blur blobs the old site used — same job
+ * (fill the space behind the type) but it says something about the work.
+ *
+ * Decorative only: aria-hidden, and it carries no information that is not
+ * also in the copy.
+ */
+const NODES = [
+  { x: 80, y: 60, label: "WEB" },
+  { x: 80, y: 200, label: "API" },
+  { x: 80, y: 340, label: "SOCIAL" },
+  { x: 340, y: 200, label: "SCRAPE" },
+  { x: 560, y: 120, label: "KAFKA" },
+  { x: 560, y: 280, label: "RAW" },
+  { x: 800, y: 200, label: "WAREHOUSE" },
+  { x: 1000, y: 120, label: "DBT" },
+  { x: 1000, y: 300, label: "DASHBOARD" },
+];
+
+const EDGES = [
+  "M126 60 H230 V200 H294",
+  "M126 200 H294",
+  "M126 340 H230 V200 H294",
+  "M386 200 H480 V120 H514",
+  "M386 200 H480 V280 H514",
+  "M606 120 H700 V200 H754",
+  "M606 280 H700 V200 H754",
+  "M846 200 H920 V120 H954",
+  "M846 200 H920 V300 H954",
+];
+
+const W = 46;
+const H = 20;
+---
+
+<svg
+  class="pipeline"
+  viewBox="0 0 1120 400"
+  fill="none"
+  aria-hidden="true"
+  data-pipeline
+>
+  {
+    EDGES.map((d) => (
+      <>
+        <path d={d} class="edge" />
+        <path d={d} class="edge-flow" data-flow />
+      </>
+    ))
+  }
+  {
+    NODES.map((n) => (
+      <g data-node>
+        <rect
+          x={n.x - W}
+          y={n.y - H}
+          width={W * 2}
+          height={H * 2}
+          class="node"
+        />
+        <text x={n.x} y={n.y + 3.5} class="node-label">
+          {n.label}
+        </text>
+      </g>
+    ))
+  }
+</svg>
+
+<style>
+  .pipeline {
+    position: absolute;
+    inset: auto 0 0 0;
+    width: 100%;
+    height: auto;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .edge {
+    stroke: var(--rule);
+    stroke-width: 1;
+  }
+  .edge-flow {
+    stroke: var(--accent);
+    stroke-width: 1.25;
+    stroke-dasharray: 4 96;
+    opacity: 0.85;
+  }
+
+  .node {
+    fill: var(--bg);
+    stroke: var(--muted);
+    stroke-width: 1;
+  }
+  .node-label {
+    fill: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-anchor: middle;
+  }
+</style>

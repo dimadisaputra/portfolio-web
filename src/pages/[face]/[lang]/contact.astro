@@ -1,0 +1,256 @@
+---
+import Base from "../../../layouts/Base.astro";
+import { facePaths, t, type Face, type Lang } from "../../../i18n";
+import { EMAIL, FORM_ENDPOINT, SOCIAL, TIMEZONE } from "../../../data/site";
+
+export const getStaticPaths = facePaths;
+
+const { face, lang } = Astro.params as { face: Face; lang: Lang };
+const i = t(lang);
+
+// Rendered server-side so the clock is never blank before hydration.
+const initialTime = new Date().toLocaleTimeString(
+  lang === "id" ? "id-ID" : "en-GB",
+  { timeZone: TIMEZONE, hour: "2-digit", minute: "2-digit" },
+);
+---
+
+<Base
+  face={face}
+  lang={lang}
+  title={`${i.contact.title} — ${i.faces[face].role}`}
+  description={i.contact.lead}
+>
+  <header class="head">
+    <p class="label">{i.contact.title}</p>
+    <a class="mailto display" href={`mailto:${EMAIL}`} data-cursor="↗">
+      {EMAIL}
+    </a>
+    <p class="lead">{i.contact.lead}</p>
+  </header>
+
+  <div class="cols">
+    <section>
+      <h2 class="label">{i.contact.elsewhere}</h2>
+      <ul class="links">
+        {
+          SOCIAL.filter((s) => !s.url.startsWith("mailto")).map((s) => (
+            <li>
+              <a
+                class="link"
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-magnetic="0.2"
+              >
+                <span class="link-label">{s.label}</span>
+                <span class="link-handle">{s.handle}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="clock label">
+        {i.contact.localTime} — Jakarta
+        <time id="clock" datetime={initialTime}>{initialTime}</time>
+      </p>
+    </section>
+
+    <section>
+      <h2 class="label">{i.contact.formTitle}</h2>
+      <form id="contact-form" action={FORM_ENDPOINT} method="POST">
+        <label class="field">
+          <span class="label">{i.contact.name}</span>
+          <input type="text" name="name" required autocomplete="name" />
+        </label>
+        <label class="field">
+          <span class="label">{i.contact.email}</span>
+          <input type="email" name="email" required autocomplete="email" />
+        </label>
+        <label class="field">
+          <span class="label">{i.contact.message}</span>
+          <textarea name="message" rows="5" required></textarea>
+        </label>
+        <button type="submit" class="submit">{i.contact.send} →</button>
+        <p id="form-status" class="status label" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </div>
+</Base>
+
+<script is:inline define:vars={{ TIMEZONE, lang, strings: i.contact }}>
+  // Clock
+  const clock = document.getElementById("clock");
+  const tick = () => {
+    if (!clock) return;
+    clock.textContent = new Date().toLocaleTimeString(
+      lang === "id" ? "id-ID" : "en-GB",
+      { timeZone: TIMEZONE, hour: "2-digit", minute: "2-digit" },
+    );
+  };
+  tick();
+  const timer = setInterval(tick, 15_000);
+  document.addEventListener("astro:before-swap", () => clearInterval(timer), {
+    once: true,
+  });
+
+  // Formspree — the endpoint is unchanged from the previous site.
+  const form = document.getElementById("contact-form");
+  const status = document.getElementById("form-status");
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const button = form.querySelector("button[type=submit]");
+    button.disabled = true;
+    button.textContent = strings.sending;
+    try {
+      const res = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" },
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      form.reset();
+      status.textContent = strings.sent;
+      button.textContent = strings.send + " →";
+    } catch {
+      status.textContent = strings.error;
+      button.textContent = strings.send + " →";
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  .head {
+    padding: clamp(8rem, 20vh, 12rem) clamp(1rem, 4vw, 2.5rem) 0;
+  }
+  .mailto {
+    display: block;
+    margin: 1.5rem 0 0;
+    /* Deliberately allowed to be the largest thing on the page. */
+    font-size: clamp(1.6rem, 7.5vw, 6rem);
+    word-break: break-word;
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.35s;
+  }
+  .mailto:hover {
+    color: var(--accent);
+  }
+  .lead {
+    margin: 2rem 0 0;
+    max-width: 52ch;
+    color: var(--muted);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .cols {
+    display: grid;
+    gap: clamp(3rem, 8vh, 5rem);
+    padding: clamp(4rem, 12vh, 8rem) clamp(1rem, 4vw, 2.5rem) 0;
+  }
+  @media (min-width: 860px) {
+    .cols {
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+    }
+  }
+
+  .links {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .links li {
+    border-bottom: 1px solid var(--rule);
+  }
+  .link {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 0;
+    text-decoration: none;
+    color: inherit;
+  }
+  .link-label {
+    font-size: 1.125rem;
+  }
+  .link-handle {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .link:hover .link-label {
+    color: var(--accent);
+  }
+
+  .clock {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 2rem;
+  }
+  .clock time {
+    color: var(--fg);
+  }
+
+  .field {
+    display: block;
+    margin-top: 1.5rem;
+  }
+  .field input,
+  .field textarea {
+    display: block;
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.75rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--rule);
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+    resize: vertical;
+  }
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    border-bottom-color: var(--accent);
+  }
+
+  .submit {
+    margin-top: 2rem;
+    padding: 0.875rem 1.5rem;
+    border: 1px solid currentColor;
+    background: transparent;
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      background 0.3s,
+      color 0.3s;
+  }
+  .submit:hover:not(:disabled) {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+  .submit:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .status:empty {
+    display: none;
+  }
+  .status {
+    margin-top: 1rem;
+    color: var(--accent);
+  }
+</style>

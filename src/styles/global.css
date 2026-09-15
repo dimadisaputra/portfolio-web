@@ -1,92 +1,137 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
-
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
 
-@theme {
-  --font-display: "Inter", sans-serif;
-  --color-ghost-white: #fffaff;
-  --color-black-alt: #050401;
-  --color-sunglow: #fdca40;
-  --color-poppy: #df2935;
-  --color-blue-crayola: #3772ff;
+/* ---------------------------------------------------------------------------
+   DUAL — two faces, one operator.
+
+   Every visual difference between de.* and se.* lives in this block. The rest
+   of the codebase never hardcodes a colour or a font family; it uses the
+   semantic tokens below, and `data-face` on <html> decides what they mean.
+   --------------------------------------------------------------------------- */
+
+:root[data-face="de"] {
+  --bg: #0b0b0b;
+  --bg-raised: #131313;
+  --fg: #e6e6e1;
+  --accent: #c8ff4d;
+  --accent-ink: #0b0b0b; /* text sitting on top of accent */
+  --muted: #6e7175;
+  --rule: rgb(255 255 255 / 0.08);
+  --grid: rgb(255 255 255 / 0.045);
+
+  --display: var(--font-mono);
+  --body: var(--font-mono);
+  --display-tracking: -0.04em;
+  --display-weight: 500;
+  --selection-bg: var(--accent);
+  --selection-fg: #0b0b0b;
+  color-scheme: dark;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
+:root[data-face="se"] {
+  --bg: #f4f1ea;
+  --bg-raised: #ebe7dd;
+  --fg: #141210;
+  --accent: #ff3b14;
+  --accent-ink: #f4f1ea;
+  --muted: #8a857c;
+  --rule: rgb(20 18 16 / 0.14);
+  --grid: rgb(20 18 16 / 0.05);
+
+  --display: var(--font-serif);
+  --body: var(--font-sans);
+  --display-tracking: -0.02em;
+  --display-weight: 400;
+  --selection-bg: var(--accent);
+  --selection-fg: #f4f1ea;
+  color-scheme: light;
+}
+
+/* `inline` so Tailwind emits var() references instead of baking the value in —
+   that is what lets one utility class mean two different things. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-raised: var(--bg-raised);
+  --color-fg: var(--fg);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+
+  --font-display: var(--display);
+  --font-body: var(--body);
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--body);
+    -webkit-font-smoothing: antialiased;
+    /* ScrollSmoother drives scrolling; native smooth scroll would fight it. */
+    scroll-behavior: auto;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  body {
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--selection-bg);
+    color: var(--selection-fg);
+  }
+
+  /* One focus style for both faces. Accent contrast has been checked against
+     each face's background. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  ::placeholder {
+    color: var(--muted);
   }
 }
 
-@keyframes wave {
-  0%,
-  100% {
-    transform: rotate(0deg);
+@layer components {
+  /* Oversized display type. Clamps rather than breakpoints, so it keeps
+     bleeding to the viewport edge at every width. */
+  .display {
+    font-family: var(--display);
+    font-weight: var(--display-weight);
+    letter-spacing: var(--display-tracking);
+    line-height: 0.86;
+    text-wrap: balance;
   }
-  25% {
-    transform: rotate(20deg);
+
+  /* Small uppercase mono label. Deliberately identical on both faces — it is
+     the thread that makes the two sites read as one person. */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
-  75% {
-    transform: rotate(-20deg);
+
+  /* Hairline column grid, DE only. Purely decorative. */
+  .grid-overlay {
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--grid) 0 1px,
+      transparent 1px calc(100% / 12)
+    );
   }
 }
 
-@keyframes bounce-slow {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
+/* Elements the motion layer animates in.
 
-@keyframes pulseSlow {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-@keyframes shake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-5px) rotate(-5deg);
-  }
-  75% {
-    transform: translateX(5px) rotate(5deg);
-  }
-}
-
-.animate-pulse-slow {
-  animation: pulseSlow 3s ease-in-out infinite;
-}
-
-.animate-shake {
-  animation: shake 2s ease-in-out infinite;
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s ease-out;
-}
-
-.animate-wave {
-  animation: wave 2s ease-in-out infinite;
-  display: inline-block;
-  transform-origin: 70% 70%;
-}
-
-.animate-bounce-slow {
-  animation: bounce-slow 2s ease-in-out infinite;
+   Default state is VISIBLE. `data-motion="on"` is set by motion.ts only once
+   GSAP has actually loaded and reduced-motion is off, so a failed script or a
+   JS-disabled browser can never leave the page stuck at opacity: 0. */
+html[data-motion="on"] [data-reveal] {
+  opacity: 0;
+  will-change: transform, opacity;
 }

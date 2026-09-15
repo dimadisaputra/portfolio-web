@@ -1,0 +1,66 @@
+---
+import Base from "../../../../layouts/Base.astro";
+import WorkList from "../../../../components/WorkList.astro";
+import { facePaths, t, type Face, type Lang } from "../../../../i18n";
+import { getProjects } from "../../../../lib/projects";
+
+export const getStaticPaths = facePaths;
+
+const { face, lang } = Astro.params as { face: Face; lang: Lang };
+const i = t(lang);
+const projects = await getProjects(face, lang);
+---
+
+<Base
+  face={face}
+  lang={lang}
+  title={`${i.work.title} — ${i.faces[face].role}`}
+  description={i.work.lead}
+>
+  <header class="head">
+    <h1 class="head-title display">{i.work.title}</h1>
+    <div class="head-meta">
+      <p class="head-lead">{i.work.lead}</p>
+      <p class="label">{i.work.count(projects.length)}</p>
+    </div>
+  </header>
+
+  <div class="body">
+    {
+      projects.length ? (
+        <WorkList projects={projects} face={face} lang={lang} />
+      ) : (
+        <p class="label">{i.work.empty}</p>
+      )
+    }
+  </div>
+</Base>
+
+<style>
+  .head {
+    padding: clamp(8rem, 22vh, 14rem) clamp(1rem, 4vw, 2.5rem) 0;
+  }
+  .head-title {
+    margin: 0;
+    font-size: clamp(3.5rem, 18vw, 15rem);
+    text-transform: uppercase;
+  }
+  .head-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .head-lead {
+    margin: 0;
+    max-width: 42ch;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .body {
+    padding: clamp(3rem, 8vh, 5rem) clamp(1rem, 4vw, 2.5rem) 0;
+  }
+</style>
