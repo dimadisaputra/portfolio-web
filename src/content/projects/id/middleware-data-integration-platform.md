@@ -7,6 +7,8 @@ pubDate: 2026-08-31
 updatedDate: 2026-09-03
 draft: false
 category: "Data & AI"
+cvRank: 1
+cvSummary: "Berkontribusi ke platform self-hosted (Go, React, PostgreSQL) untuk membangun pipeline ETL/CDC di kanvas visual, memuat data ke warehouse, dan menerbitkannya sebagai REST API; 49 commit berisi perbaikan replikasi CDC, pemetaan tipe data, paralelisme worker, pengaman RBAC, dan dashboard monitoring."
 faces: ["de", "se"]
 angle:
   de: "CDC yang berhenti kehilangan perubahan, dan setting worker yang benar-benar membagi pekerjaan."

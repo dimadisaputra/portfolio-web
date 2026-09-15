@@ -86,13 +86,15 @@ const id: Dict = {
 
   cv: {
     title: "Curriculum Vitae",
-    print: "Unduh sebagai PDF",
-    printHint: "Membuka dialog cetak browser — pilih “Save as PDF”.",
+    download: "Unduh PDF",
+    print: "Cetak halaman ini",
+    printHint: "Atau buka dialog cetak browser lalu pilih “Save as PDF”.",
     summary: "Ringkasan",
     experience: "Pengalaman",
     education: "Pendidikan",
     skills: "Keahlian",
     selectedProjects: "Proyek pilihan",
+    languages: "Bahasa",
     updated: "Diperbarui",
   },
 
@@ -110,7 +112,7 @@ const id: Dict = {
         "Saya mengambil data dari tempat yang sebenarnya tidak mau memberikannya, lalu mendaratkannya di tempat yang benar-benar bisa di-query.",
       lead: "Pipeline yang memindahkan puluhan juta baris dalam hitungan menit, integrasi antar sistem yang sebenarnya tidak dirancang untuk saling bicara, dan model yang disajikan dekat dengan data yang dibacanya.",
       cvSummary:
-        "Data engineer yang membangun ingestion ber-throughput tinggi di PostgreSQL dan ClickHouse, integrasi data antar sistem pemerintah, dan layanan berbasis ML — di atas pengalaman scraping dan analisis tempat saya memulai.",
+        "Data engineer dengan pengalaman 2+ tahun (termasuk magang) membangun pipeline ETL/ELT, integrasi data, dan web scraper. Saat ini menghadirkan pipeline ber-throughput tinggi (hingga 238 ribu baris/detik) di PostgreSQL dan ClickHouse serta layanan berbasis ML untuk klien telko dan pemerintah, memakai AI coding agent (Claude Code) agar pekerjaan data, backend, dan ML lebih cepat dirilis. Terbukti mengoptimalkan alur kerja, termasuk memangkas waktu pelaporan hingga 95%.",
       story: [
         "Saya mulai dengan menulis scraper untuk situs yang tidak mau di-scrape, dan tidak pernah benar-benar berhenti.",
         "Di Nolimit Indonesia saya membangun collector untuk portal berita, TikTok, dan Google Maps. Di Alpha Data Labs pekerjaannya naik satu tingkat: klasifikasi relevansi, sentiment, dan laporan yang sampai ke brand kecantikan, BUMN, dan kampanye politik.",

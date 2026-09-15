@@ -83,13 +83,15 @@ const en = {
 
   cv: {
     title: "Curriculum Vitae",
-    print: "Download as PDF",
-    printHint: "Opens your browser's print dialogue — choose “Save as PDF”.",
+    download: "Download PDF",
+    print: "Print this page",
+    printHint: "Or open your browser's print dialogue and choose “Save as PDF”.",
     summary: "Summary",
     experience: "Experience",
     education: "Education",
     skills: "Skills",
     selectedProjects: "Selected projects",
+    languages: "Languages",
     updated: "Updated",
   },
 
@@ -111,7 +113,7 @@ const en = {
         "I get data out of places that would rather not give it up, and land it somewhere a business can actually query.",
       lead: "Pipelines that move tens of millions of rows in minutes, integrations between systems that were never meant to talk, and models served next to the data they read.",
       cvSummary:
-        "Data engineer building high-throughput ingestion on PostgreSQL and ClickHouse, data integrations between government systems and ML-backed services — on top of the scraping and analysis work I started with.",
+        "Data engineer with 2+ years of experience (including internships) building ETL/ELT pipelines, data integrations and web scrapers. Currently delivering high-throughput pipelines (up to 238K rows/sec) on PostgreSQL and ClickHouse and ML-backed services for telco and government clients, using AI coding agents (Claude Code) to ship faster across data, backend and ML work. Proven track record in optimising workflows, including cutting reporting time by 95%.",
       story: [
         "I started by writing scrapers for sites that did not want to be scraped, and never really stopped.",
         "At Nolimit Indonesia I built collectors for news portals, TikTok and Google Maps. At Alpha Data Labs the work moved up the stack: relevance classification, sentiment, and the reports that went to beauty brands, state-owned enterprises and political campaigns.",

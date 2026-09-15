@@ -18,6 +18,10 @@ const projects = defineCollection({
       category: z.enum(["Data & AI", "Web & App", "Game", "Fun"]),
       tags: z.array(z.string()).optional(),
       repoURL: z.string().url().optional(),
+      /** Position on /cv and in the PDF. Unranked projects stay off the CV. */
+      cvRank: z.number().optional(),
+      /** One-line CV wording; falls back to the face angle. */
+      cvSummary: z.string().optional(),
 
       /** Which side(s) of the site this project belongs on. */
       faces: z.array(z.enum(["de", "se"])).nonempty(),

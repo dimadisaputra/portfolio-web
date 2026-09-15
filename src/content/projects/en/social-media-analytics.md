@@ -8,6 +8,8 @@ updatedDate: 2026-02-01
 repoURL: "https://github.com/dimadisaputra/social-media-analytics"
 draft: false
 category: "Data & AI"
+cvRank: 2
+cvSummary: "A full-stack data pipeline and analytics dashboard for monitoring TikTok and Instagram performance, built on Snowflake, dbt and Streamlit with AI-powered sentiment analysis via Snowflake Cortex."
 faces: ["de", "se"]
 angle:
   de: "Bronze to gold in Snowflake, with sentiment scored inside the warehouse."

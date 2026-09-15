@@ -7,6 +7,7 @@ pubDate: 2026-08-04
 updatedDate: 2026-09-10
 draft: false
 category: "Web & App"
+cvRank: 3
 faces: ["se"]
 angle:
   se: "Maps, deep links and approval flows in two Flutter apps for field technicians."

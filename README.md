@@ -83,5 +83,10 @@ If the second one 404s, the rewrite's exclusion pattern is eating the assets.
   transforms that element. `unstick()` in `motion.ts` lifts such nodes to
   `<body>`.
 - The contact form posts to the same Formspree endpoint the previous site used.
-- The CV is a page (`/cv`), print-styled to A4. There is no PDF in the repo —
-  print to PDF from the browser.
+- The CV is a page (`/cv`), print-styled to A4, and it is the single source for
+  the downloadable PDFs. After changing CV content run `bun run cv:pdf`, which
+  prints every face × language to `public/cv/*.pdf` with headless Chrome, and
+  commit the PDFs — Vercel cannot generate them. Set `CV_PHONE` in `.env` to put
+  a phone number in the PDFs only; it is never written into the HTML.
+- What the CV shows: `cvPoints` on a role (falls back to `points`), projects
+  with `cvRank` in frontmatter (top 3), `CV_SKILLS` in `src/data/stack.ts`.

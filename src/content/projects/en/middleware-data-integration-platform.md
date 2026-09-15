@@ -7,6 +7,8 @@ pubDate: 2026-08-31
 updatedDate: 2026-09-03
 draft: false
 category: "Data & AI"
+cvRank: 1
+cvSummary: "Contributed to a self-hosted platform (Go, React, PostgreSQL) where users build ETL/CDC pipelines on a visual canvas, load into a warehouse and publish data as REST APIs; shipped 49 commits covering CDC replication fixes, type mapping, worker parallelism, RBAC safeguards and monitoring dashboards."
 faces: ["de", "se"]
 angle:
   de: "CDC that stopped losing changes, and a worker setting that actually splits the work."

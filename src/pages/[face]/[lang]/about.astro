@@ -63,7 +63,9 @@ const roles = rolesFor(face);
       {
         EDUCATION.map((e) => (
           <li class="entry" data-reveal>
-            <div class="entry-when label">{e.period}</div>
+            <div class="entry-when label">
+              {e.from} — {e.to ?? i.about.present}
+            </div>
             <div class="entry-what">
               <h3 class="entry-title">{e.field[lang]}</h3>
               <p class="entry-org">

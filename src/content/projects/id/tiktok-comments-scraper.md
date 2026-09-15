@@ -7,6 +7,8 @@ pubDate: 2023-08-01
 updatedDate: 2023-09-30
 draft: false
 category: "Data & AI"
+cvRank: 3
+cvSummary: "Mengambil komentar TikTok beserta metadatanya (user, tanggal, ID video), mengubahnya ke JSONL, lalu mengalirkannya ke Kafka."
 faces: ["de"]
 angle:
   de: "Komentar ke JSONL ke Kafka, tanpa memicu deteksi."

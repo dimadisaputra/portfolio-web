@@ -7,6 +7,8 @@ pubDate: 2023-08-01
 updatedDate: 2023-09-30
 draft: false
 category: "Data & AI"
+cvRank: 3
+cvSummary: "Scraped TikTok comments and metadata (user, date, video ID), converted them to JSONL and streamed them to Kafka."
 faces: ["de"]
 angle:
   de: "Comments to JSONL to Kafka, without tripping detection."

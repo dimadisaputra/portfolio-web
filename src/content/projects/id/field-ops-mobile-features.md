@@ -7,6 +7,7 @@ pubDate: 2026-08-04
 updatedDate: 2026-09-10
 draft: false
 category: "Web & App"
+cvRank: 3
 faces: ["se"]
 angle:
   se: "Peta, deep link, dan alur approval di dua aplikasi Flutter untuk teknisi lapangan."
