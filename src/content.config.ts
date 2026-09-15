@@ -7,8 +7,7 @@ import { glob } from "astro/loaders";
  */
 const projects = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/projects" }),
-  schema: ({ image }) =>
-    z.object({
+  schema: z.object({
       title: z.string(),
       seoTitle: z.string().optional(),
       description: z.string(),
@@ -16,8 +15,6 @@ const projects = defineCollection({
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       draft: z.boolean().default(false),
-      image: image(),
-      imageAlt: z.string(),
       category: z.enum(["Data & AI", "Web & App", "Game", "Fun"]),
       tags: z.array(z.string()).optional(),
       repoURL: z.string().url().optional(),

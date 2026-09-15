@@ -6,8 +6,6 @@ author: "Dimas Adi Saputra"
 pubDate: 2023-06-01
 updatedDate: 2023-07-31
 draft: false
-image: "../../_images/online-media-portal-scraper.png"
-imageAlt: "Thumbnail for Scrapy-based Online Media Portal Scraper"
 category: "Data & AI"
 faces: ["de"]
 angle:

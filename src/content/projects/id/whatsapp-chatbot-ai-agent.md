@@ -6,8 +6,6 @@ author: "Dimas Adi Saputra"
 pubDate: 2025-02-14
 updatedDate: 2025-02-14
 draft: false
-image: "../../_images/whatsapp-chatbot-ai-agent.jpg"
-imageAlt: "Thumbnail proyek Whatsapp Chatbot AI Agent"
 category: "Data & AI"
 faces: ["de", "se"]
 angle:

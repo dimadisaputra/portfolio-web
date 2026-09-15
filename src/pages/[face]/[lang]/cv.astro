@@ -104,9 +104,11 @@ const updated = new Date().toLocaleDateString(
                 {[e.period, e.location].filter(Boolean).join(" · ")}
               </span>
             </div>
-            <p class="cv-points">
-              {i.about.gpa} {e.gpa}
-            </p>
+            {e.gpa && (
+              <p class="cv-points">
+                {i.about.gpa} {e.gpa}
+              </p>
+            )}
           </div>
         ))
       }

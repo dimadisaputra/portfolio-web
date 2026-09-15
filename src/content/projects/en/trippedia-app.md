@@ -6,8 +6,6 @@ author: "Dimas Adi Saputra"
 pubDate: 2024-09-01
 updatedDate: 2024-11-30
 draft: false
-image: "../../_images/trippedia-app.jpg"
-imageAlt: "Thumbnail of the Trippedia Desktop App"
 category: "Web & App"
 faces: ["se"]
 angle:

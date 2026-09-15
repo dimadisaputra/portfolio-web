@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import { render } from "astro:content";
 import Base from "../../../../layouts/Base.astro";
 import { href, t, type Face, type Lang } from "../../../../i18n";
@@ -51,17 +50,6 @@ const meta = [
       </h1>
       <p class="angle">{angleOf(entry, face)}</p>
     </header>
-
-    <figure class="cover">
-      <Image
-        src={entry.data.image}
-        alt={entry.data.imageAlt}
-        widths={[640, 1024, 1600]}
-        sizes="(min-width: 1100px) 1100px, 100vw"
-        loading="eager"
-        class="cover-img"
-      />
-    </figure>
 
     <div class="layout">
       <aside class="meta">
@@ -135,18 +123,6 @@ const meta = [
     color: var(--muted);
     font-size: 1.0625rem;
     line-height: 1.5;
-  }
-
-  .cover {
-    margin: clamp(3rem, 8vh, 5rem) 0 0;
-    padding-inline: clamp(1rem, 4vw, 2.5rem);
-  }
-  .cover-img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    border: 1px solid var(--rule);
   }
 
   .layout {

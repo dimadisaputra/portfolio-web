@@ -6,8 +6,6 @@ author: "Dimas Adi Saputra"
 pubDate: 2023-09-01
 updatedDate: 2023-09-30
 draft: false
-image: "../../_images/gmaps-reviews-scraper.jpg"
-imageAlt: "Thumbnail of Google Maps Reviews Scraper"
 category: "Data & AI"
 faces: ["de"]
 angle:

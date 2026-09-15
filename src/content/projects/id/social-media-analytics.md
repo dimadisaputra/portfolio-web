@@ -7,8 +7,6 @@ pubDate: 2026-02-01
 updatedDate: 2026-02-01
 repoURL: "https://github.com/dimadisaputra/social-media-analytics"
 draft: false
-image: "../../_images/social-media-analytics.png"
-imageAlt: "Thumbnail proyek Social Media Analytics"
 category: "Data & AI"
 faces: ["de", "se"]
 angle:

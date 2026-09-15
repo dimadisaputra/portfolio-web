@@ -6,8 +6,6 @@ author: "Dimas Adi Saputra"
 pubDate: 2024-02-01
 updatedDate: 2024-05-31
 draft: false
-image: "../../_images/caridulu.jpg"
-imageAlt: "Antarmuka website pembanding produk Caridulu"
 category: "Web & App"
 faces: ["de", "se"]
 angle:

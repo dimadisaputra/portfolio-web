@@ -80,7 +80,6 @@ function setup() {
       if (fine) {
         cursor();
         magnets();
-        workPreview();
       }
 
       // ScrollTrigger measures on creation; webfonts land later and change
@@ -249,43 +248,6 @@ function cursor() {
       delete dot.dataset.state;
     });
   });
-}
-
-/**
- * Work index: a single preview frame trails the pointer and cross-fades to
- * whichever row is hovered. One fixed element for the whole list, not one per
- * row — the images are already in the DOM, only opacity changes.
- */
-function workPreview() {
-  const box = document.querySelector<HTMLElement>("[data-worklist-preview]");
-  if (!box) return;
-  unstick(box);
-
-  const x = gsap.quickTo(box, "x", { duration: 0.55, ease: "power3" });
-  const y = gsap.quickTo(box, "y", { duration: 0.55, ease: "power3" });
-  listen(window, "pointermove", (e) => {
-    x(e.clientX);
-    y(e.clientY);
-  });
-
-  let shown: HTMLElement | null = null;
-
-  document
-    .querySelectorAll<HTMLElement>("[data-preview-for]")
-    .forEach((row) => {
-      const img = box.querySelector<HTMLElement>(
-        `[data-preview="${CSS.escape(row.dataset.previewFor!)}"]`,
-      );
-      row.addEventListener("pointerenter", () => {
-        gsap.to(box, { opacity: 1, scale: 1, duration: 0.35, ease: "power3.out" });
-        if (shown && shown !== img) gsap.to(shown, { opacity: 0, duration: 0.3 });
-        if (img) gsap.to(img, { opacity: 1, duration: 0.3 });
-        shown = img;
-      });
-      row.addEventListener("pointerleave", () => {
-        gsap.to(box, { opacity: 0, scale: 0.92, duration: 0.3 });
-      });
-    });
 }
 
 /** `data-magnetic` — element leans toward the pointer, then springs back. */

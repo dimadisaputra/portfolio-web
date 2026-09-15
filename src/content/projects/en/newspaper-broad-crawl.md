@@ -6,8 +6,6 @@ author: "Dimas Adi Saputra"
 pubDate: 2023-11-01
 updatedDate: 2023-11-30
 draft: false
-image: "../../_images/newspaper-broad-crawl.jpg"
-imageAlt: "Data pipeline for the Newspaper Broad Crawl project streaming to Kafka"
 category: "Data & AI"
 faces: ["de"]
 angle:

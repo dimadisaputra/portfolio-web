@@ -108,30 +108,31 @@ const id: Dict = {
       kicker: "The Pipeline",
       statement:
         "Saya mengambil data dari tempat yang sebenarnya tidak mau memberikannya, lalu mendaratkannya di tempat yang benar-benar bisa di-query.",
-      lead: "Scraper yang tahan bot detection, warehouse yang tetap benar saat dijalankan dua kali, dan orchestration yang gagal dengan berisik, bukan diam-diam.",
+      lead: "Pipeline yang memindahkan puluhan juta baris dalam hitungan menit, integrasi antar sistem yang sebenarnya tidak dirancang untuk saling bicara, dan model yang disajikan dekat dengan data yang dibacanya.",
       cvSummary:
-        "Data engineer yang bekerja di ingestion skala besar — web scraping, streaming, dan pemodelan warehouse — beserta analisis dan pelaporan di atasnya.",
+        "Data engineer yang membangun ingestion ber-throughput tinggi di PostgreSQL dan ClickHouse, integrasi data antar sistem pemerintah, dan layanan berbasis ML — di atas pengalaman scraping dan analisis tempat saya memulai.",
       story: [
         "Saya mulai dengan menulis scraper untuk situs yang tidak mau di-scrape, dan tidak pernah benar-benar berhenti.",
         "Di Nolimit Indonesia saya membangun collector untuk portal berita, TikTok, dan Google Maps. Di Alpha Data Labs pekerjaannya naik satu tingkat: klasifikasi relevansi, sentiment, dan laporan yang sampai ke brand kecantikan, BUMN, dan kampanye politik.",
+        "Di TAN Digital skalanya naik. Saya memindahkan KPI jaringan milik operator telko nasional ke ClickHouse dengan kecepatan hingga 238 ribu baris per detik, membangun layanan OCR KTP dari gambar pertama yang dilabeli sampai model yang jalan di Triton, dan mengembangkan integrasi sertifikasi perangkat antara dua sistem pemerintah — dengan AI coding agent yang mengetik, supaya waktu saya habis di desain dan verifikasi.",
         "Yang sekarang saya pedulikan justru bagian yang tidak glamor — bahwa run kedua menghasilkan angka yang sama dengan run pertama, bahwa kegagalan berisik dan bukan diam-diam, dan bahwa orang yang membaca dashboard punya alasan untuk percaya.",
       ],
       capabilities: [
         {
           title: "Ingestion skala besar",
-          body: "Scrapy, Playwright, dan GraphQL mentah untuk situs yang aktif menolak. Rotasi token, cooldown bertingkat, ribuan domain.",
+          body: "Streaming dari PostgreSQL ke ClickHouse dengan ratusan ribu baris per detik, dan Playwright untuk situs maupun dashboard yang aktif menolak.",
         },
         {
           title: "Pemodelan warehouse",
           body: "Lapisan bronze, silver, dan gold di Snowflake, transformasi lewat dbt, pola MERGE yang tetap idempoten saat loader jalan dua kali.",
         },
         {
-          title: "Orchestration",
-          body: "Prefect dan Kafka. Concurrency yang aman saat dibatalkan, parameter dinamis, dan pipeline yang langsung memberi tahu begitu rusak.",
+          title: "Integrasi & observability",
+          body: "Pemetaan, deteksi gap, dan log append-only di antara sistem yang datanya tidak sepakat — plus dashboard Grafana Loki yang menunjukkan gap sebelum pengguna menemukannya.",
         },
         {
-          title: "Analisis yang sampai",
-          body: "Sentiment, klasifikasi, dan grafik yang akhirnya dibaca orang yang memutuskan anggaran.",
+          title: "ML di production",
+          body: "Dataset dilabeli sendiri, YOLOv8 dilatih, engine OCR dibandingkan, lalu pemenangnya disajikan di NVIDIA Triton di balik API sungguhan.",
         },
       ],
     },
@@ -142,16 +143,16 @@ const id: Dict = {
         "Saya membangun keseluruhannya — dari scraper yang tidak terlihat siapa pun sampai antarmuka yang benar-benar dibuka orang.",
       lead: "Backend, aplikasi desktop, dashboard, dan chatbot. Bagian tengah yang tidak glamor, tempat data berubah jadi produk.",
       cvSummary:
-        "Full-stack engineer yang membangun produk di atas data: API, dashboard, aplikasi desktop, dan chatbot — biasanya sekalian dengan pipeline di bawahnya.",
+        "Full-stack engineer yang membangun produk di atas data: backend Go, aplikasi Flutter, platform integrasi, dashboard, dan chatbot — biasanya sekalian dengan pipeline di bawahnya.",
       story: [
         "Sebagian besar pekerjaan saya dimulai di bawah antarmuka, di bagian yang tidak terlihat siapa pun, lalu harus berubah jadi sesuatu yang bisa dibuka orang.",
-        "Saya pernah merilis aplikasi desktop untuk perusahaan travel, mesin pembanding produk lintas tiga marketplace Indonesia, chatbot WhatsApp untuk laporan warga, dan dashboard yang berdiri di atas pipeline buatan saya sendiri.",
+        "Saya pernah merilis aplikasi desktop untuk perusahaan travel, mesin pembanding produk lintas tiga marketplace Indonesia, chatbot WhatsApp untuk laporan warga, dan dashboard yang berdiri di atas pipeline buatan saya sendiri. Belakangan: backend Go untuk layanan OCR dan sistem sertifikasi pemerintah, perbaikan di platform integrasi data, dan fitur Flutter untuk aplikasi operasional lapangan.",
         "Saya terbiasa jadi satu-satunya engineer di sebuah proyek. Artinya menulis crawler, API, skema, dan front end sekaligus — dan tahu bagian mana yang sebaiknya dibiarkan membosankan.",
       ],
       capabilities: [
         {
           title: "Ujung ke ujung",
-          body: "FastAPI, Node, React, Electron. Saya pernah merilis setiap lapisan stack, termasuk bagian yang sebenarnya malas saya tulis.",
+          body: "Go, FastAPI, Node, React, Flutter, Electron. Saya pernah merilis setiap lapisan stack, termasuk bagian yang sebenarnya malas saya tulis.",
         },
         {
           title: "Produk di atas data",

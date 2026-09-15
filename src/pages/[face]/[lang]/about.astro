@@ -69,9 +69,11 @@ const roles = rolesFor(face);
               <p class="entry-org">
                 {e.school} <span class="entry-loc">· {e.location}</span>
               </p>
-              <p class="entry-points">
-                {i.about.gpa} {e.gpa}
-              </p>
+              {e.gpa && (
+                <p class="entry-points">
+                  {i.about.gpa} {e.gpa}
+                </p>
+              )}
             </div>
           </li>
         ))

@@ -6,8 +6,6 @@ author: "Dimas Adi Saputra"
 pubDate: 2023-08-01
 updatedDate: 2023-09-30
 draft: false
-image: "../../_images/tiktok-comments-scraper.jpg"
-imageAlt: "Thumbnail of TikTok Comments Scraper with Kafka integration"
 category: "Data & AI"
 faces: ["de"]
 angle:

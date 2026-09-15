@@ -6,8 +6,6 @@ author: "Dimas Adi Saputra"
 pubDate: 2025-09-01
 updatedDate: 2025-09-01
 draft: false
-image: "../../_images/social-media-report-automation.jpg"
-imageAlt: "Thumbnail proyek Social Media Report Automation"
 category: "Data & AI"
 faces: ["de"]
 angle:
