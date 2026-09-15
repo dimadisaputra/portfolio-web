@@ -25,6 +25,26 @@ let splits: SplitText[] = [];
 /** Listeners bound to window/document, which survive the page swap. */
 let cleanups: (() => void)[] = [];
 
+/**
+ * Last known pointer position. Kept outside setup/teardown on purpose: the
+ * router swaps in a fresh #cursor at (0, 0) on every navigation, and without
+ * this it would sit in the top-left corner until the mouse moved again.
+ */
+const pointer = { x: 0, y: 0, seen: false };
+window.addEventListener(
+  "pointermove",
+  (e) => {
+    pointer.x = e.clientX;
+    pointer.y = e.clientY;
+    pointer.seen = true;
+  },
+  { passive: true },
+);
+
+function placeCursor(dot: HTMLElement | null) {
+  if (dot && pointer.seen) gsap.set(dot, { x: pointer.x, y: pointer.y });
+}
+
 function listen<K extends keyof WindowEventMap>(
   target: Window | Document,
   type: K,
@@ -229,6 +249,7 @@ function pipeline() {
 function cursor() {
   const dot = document.getElementById("cursor");
   if (!dot) return;
+  placeCursor(dot);
 
   const x = gsap.quickTo(dot, "x", { duration: 0.35, ease: "power3" });
   const y = gsap.quickTo(dot, "y", { duration: 0.35, ease: "power3" });
@@ -273,3 +294,8 @@ function magnets() {
 
 document.addEventListener("astro:page-load", setup);
 document.addEventListener("astro:before-swap", teardown);
+// Runs as soon as the new body is in, before page-load — so the cursor is
+// already under the pointer while the view transition plays.
+document.addEventListener("astro:after-swap", () =>
+  placeCursor(document.getElementById("cursor")),
+);
