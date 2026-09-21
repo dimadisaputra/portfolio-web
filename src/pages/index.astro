@@ -5,7 +5,7 @@ import en from "../i18n/en";
 import id from "../i18n/id";
 import { DEFAULT_LANG, FACES, faceHref } from "../i18n";
 import { FACE_DOMAIN } from "../site-config";
-import { NAME } from "../data/site";
+import { NAME, SOCIAL } from "../data/site";
 
 // The gateway is the only page that shows both faces at once, so it cannot
 // use the `data-face` token swap. Each panel carries its own palette.
@@ -18,6 +18,16 @@ const panels = FACES.map((face) => ({
 const title = `${NAME} — Data Engineer & Software Engineer`;
 const description =
   "Data Engineer and Software Engineer. Two disciplines, one operator. Pick a door.";
+
+// Lets Google tie the site, LinkedIn and GitHub to one person for name searches.
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: NAME,
+  url: Astro.site?.href,
+  jobTitle: ["Data Engineer", "Software Engineer"],
+  sameAs: SOCIAL.filter((s) => s.url.startsWith("http")).map((s) => s.url),
+};
 ---
 
 <!doctype html>
@@ -28,6 +38,8 @@ const description =
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={Astro.site?.href} />
+    <script type="application/ld+json" set:html={JSON.stringify(person)} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
